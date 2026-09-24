@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Liga Mexicana de FUMBBL — Standings</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Anton&family=Roboto+Condensed:wght@400;500;700;900&display=swap');
+
+        :root {
+            --bg: #080a09;
+            --bg-light: #111512;
+            --panel: #151a17;
+            --panel-2: #1d231f;
+
+            --green: #1e7b45;
+            --green-light: #2ca85d;
+            --green-dark: #0e4226;
+
+            --gold: #d6a93a;
+            --gold-light: #f0cc65;
+
+            --red: #a92828;
+            --red-light: #d33c3c;
+
+            --white: #f4f1e8;
+            --muted: #9ca49d;
+
+            --border: rgba(214, 169, 58, .35);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            color: var(--white);
+            background:
+                radial-gradient(
+                    circle at 50% -10%,
+                    rgba(44, 168, 93, .20),
+                    transparent 45%
+                ),
+                linear-gradient(
+                    rgba(8, 10, 9, .95),
+                    rgba(8, 10, 9, .98)
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent 0,
+                    transparent 48px,
+                    rgba(255,255,255,.015) 49px,
+                    transparent 50px
+                );
+
+            font-family: 'Roboto Condensed', sans-serif;
+        }
+
+        a.team-link {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        a.team-link:hover {
+            color: inherit;
+            text-decoration: none;
+        }
+
+
+        /* ================================
+           HEADER
+        ================================= */
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+
+            padding: 45px 20px 35px;
+
+            text-align: center;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    rgba(15, 55, 31, .95),
+                    rgba(8, 10, 9, .98)
+                );
+
+            border-bottom: 4px solid var(--gold);
+            box-shadow: 0 10px 35px rgba(0,0,0,.6);
+        }
+
+        .hero::before {
+            content: "";
+
+            position: absolute;
+            inset: 0;
+
+            background:
+                repeating-linear-gradient(
+                    90deg,
+                    transparent 0,
+                    transparent 79px,
+                    rgba(255,255,255,.025) 80px
+                );
+
+            pointer-events: none;
+        }
+
+        .league-badge {
+            position: relative;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            width: 90px;
+            height: 90px;
+
+            margin-bottom: 15px;
+
+            border: 3px solid var(--gold);
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    var(--green) 0%,
+                    var(--green-dark) 70%
+                );
+
+            box-shadow:
+                0 0 0 7px rgba(214,169,58,.08),
+                0 8px 25px rgba(0,0,0,.5);
+
+            font-size: 42px;
+        }
+
+        h1 {
+            position: relative;
+
+            margin: 0;
+
+            font-family: 'Anton', sans-serif;
+            font-size: clamp(42px, 8vw, 78px);
+            font-weight: 400;
+            line-height: .95;
+
+            letter-spacing: 2px;
+            text-transform: uppercase;
+
+            color: var(--white);
+
+            text-shadow:
+                3px 3px 0 #000,
+                0 0 25px rgba(214,169,58,.15);
+        }
+
+        .subtitle {
+            position: relative;
+
+            margin: 12px 0 0;
+
+            color: var(--gold-light);
+
+            font-size: 17px;
+            font-weight: 700;
+            letter-spacing: 4px;
+
+            text-transform: uppercase;
+        }
+
+        /* ================================
+           CONTENT
+        ================================= */
+
+        .container {
+            width: min(1400px, calc(100% - 30px));
+            margin: 35px auto 60px;
+        }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+
+            margin-bottom: 25px;
+            padding: 15px 18px;
+
+            background: var(--panel);
+
+            border: 1px solid var(--border);
+            border-left: 5px solid var(--green-light);
+
+            box-shadow: 0 8px 25px rgba(0,0,0,.35);
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            color: var(--muted);
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+
+            border-radius: 50%;
+
+            background: var(--green-light);
+
+            box-shadow: 0 0 12px var(--green-light);
+        }
+
+        button {
+            padding: 10px 18px;
+
+            color: #10140f;
+
+            background: var(--gold);
+
+            border: 0;
+            border-bottom: 3px solid #8e6d19;
+
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 900;
+
+            text-transform: uppercase;
+            letter-spacing: 1px;
+
+            cursor: pointer;
+
+            transition: .2s ease;
+        }
+
+        button:hover {
+            background: var(--gold-light);
+            transform: translateY(-1px);
+        }
+
+        /* ================================
+           GROUPS
+        ================================= */
+
+        .groups {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(500px, 1fr)
+            );
+
+            gap: 28px;
+        }
+
+        .group {
+            overflow: hidden;
+
+            background: var(--panel);
+
+            border: 1px solid var(--border);
+
+            box-shadow:
+                0 15px 40px rgba(0,0,0,.45);
+        }
+
+        .group-header {
+            position: relative;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 17px 20px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--green-dark),
+                    var(--green)
+                );
+
+            border-bottom: 4px solid var(--gold);
+        }
+
+        .group-header::after {
+            content: "";
+
+            position: absolute;
+            right: 0;
+            top: 0;
+
+            width: 35%;
+            height: 100%;
+
+            background:
+                repeating-linear-gradient(
+                    -45deg,
+                    transparent 0,
+                    transparent 12px,
+                    rgba(255,255,255,.04) 13px,
+                    transparent 14px
+                );
+
+            pointer-events: none;
+        }
+
+        .group-title {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .group-letter {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            width: 52px;
+            height: 52px;
+
+            color: #17130a;
+
+            background: var(--gold);
+
+            border: 3px solid #f1d57b;
+
+            box-shadow: 3px 3px 0 #0b2415;
+
+            font-family: 'Anton', sans-serif;
+            font-size: 32px;
+        }
+
+        .group-name {
+            font-family: 'Anton', sans-serif;
+            font-size: 28px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .team-count {
+            position: relative;
+            z-index: 2;
+
+            color: var(--gold-light);
+
+            font-size: 13px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* ================================
+           TABLE
+        ================================= */
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+
+            min-width: 650px;
+        }
+
+        thead {
+            background: #0d100e;
+        }
+
+        th {
+            padding: 11px 8px;
+
+            color: var(--muted);
+
+            border-bottom: 1px solid #303730;
+
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: 1px;
+
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        th.team-column {
+            text-align: left;
+            padding-left: 15px;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid rgba(255,255,255,.055);
+
+            transition:
+                background .15s ease,
+                transform .15s ease;
+        }
+
+        tbody tr:hover {
+            background: rgba(44,168,93,.08);
+        }
+
+        td {
+            padding: 12px 7px;
+
+            text-align: center;
+
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        td.team {
+            width: 40%;
+
+            text-align: left;
+            padding-left: 15px;
+        }
+
+        /* ================================
+           POSITION
+        ================================= */
+
+        .position {
+            width: 42px;
+
+            font-family: 'Anton', sans-serif;
+            font-size: 22px;
+
+            color: var(--muted);
+        }
+
+        tr:nth-child(1) .position {
+            color: var(--gold-light);
+        }
+
+        tr:nth-child(2) .position,
+        tr:nth-child(3) .position {
+            color: #c7cec9;
+        }
+
+        /* ================================
+           TEAM NAME
+        ================================= */
+
+        .team-name {
+            color: var(--white);
+
+            font-size: 16px;
+            font-weight: 900;
+        }
+
+        .team-id {
+            display: block;
+
+            margin-top: 2px;
+
+            color: #687169;
+
+            font-size: 10px;
+            font-weight: 400;
+            letter-spacing: 1px;
+        }
+
+        /* ================================
+           RECORD
+        ================================= */
+
+        .record {
+            white-space: nowrap;
+        }
+
+        .wins {
+            color: #5fd98b;
+        }
+
+        .ties {
+            color: var(--gold-light);
+        }
+
+        .losses {
+            color: #e66a6a;
+        }
+
+        .points {
+            color: var(--gold-light);
+
+            font-family: 'Anton', sans-serif;
+            font-size: 20px;
+        }
+
+        .positive {
+            color: #63d78c;
+        }
+
+        .negative {
+            color: #ed7777;
+        }
+
+        /* ================================
+           LOADING
+        ================================= */
+
+        .loading {
+            padding: 70px 20px;
+
+            text-align: center;
+        }
+
+        .ball {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            width: 70px;
+            height: 70px;
+
+            margin-bottom: 18px;
+
+            border-radius: 50%;
+
+            background: #633b1d;
+
+            border: 4px solid #a8733d;
+
+            animation: pulse 1.2s infinite alternate;
+
+            font-size: 30px;
+        }
+
+        @keyframes pulse {
+            from {
+                transform: scale(.95) rotate(-8deg);
+            }
+
+            to {
+                transform: scale(1.05) rotate(8deg);
+            }
+        }
+
+        .loading-text {
+            color: var(--gold-light);
+
+            font-family: 'Anton', sans-serif;
+            font-size: 24px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .error {
+            padding: 30px;
+
+            color: #ffb0b0;
+
+            background: rgba(169,40,40,.15);
+
+            border: 1px solid var(--red);
+        }
+
+        /* ================================
+           EMPTY GROUP
+        ================================= */
+
+        .empty {
+            padding: 30px;
+
+            color: var(--muted);
+
+            text-align: center;
+            font-style: italic;
+        }
+
+        /* ================================
+           FOOTER
+        ================================= */
+
+        footer {
+            padding: 30px 20px;
+
+            color: #5e665f;
+
+            border-top: 1px solid #252a26;
+
+            text-align: center;
+
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* ================================
+           MOBILE
+        ================================= */
+
+        @media (max-width: 700px) {
+
+            .container {
+                width: calc(100% - 16px);
+                margin-top: 20px;
+            }
+
+            .groups {
+                grid-template-columns: 1fr;
+            }
+
+            .group {
+                width: 100%;
+            }
+
+            .toolbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .group-header {
+                padding: 13px;
+            }
+
+            .group-name {
+                font-size: 22px;
+            }
+
+            .group-letter {
+                width: 44px;
+                height: 44px;
+                font-size: 27px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="hero">
+
+    <div class="league-badge">
+        🏈
+    </div>
+
+    <h1>Liga Mexicana de FUMBBL</h1>
+
+    <div class="subtitle">
+        Tepache Cup Season
+    </div>
+
+</header>
+
+
+<main class="container">
+
+    <div class="toolbar">
+
+        <div class="status">
+            <span class="status-dot"></span>
+
+            <span id="status">
+                Cargando equipos...
+            </span>
+        </div>
+
+        <button id="reload">
+            ↻ Actualizar
+        </button>
+
+    </div>
+
+
+    <div id="standings">
+
+        <div class="loading">
+
+            <div class="ball">
+                🏈
+            </div>
+
+            <div class="loading-text">
+                Preparando la liga...
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<footer>
+    Liga Mexicana de FMBBL · Official Standings
+</footer>
+
+
+<script>
+
+    /*
+     * ============================================================
+     * CONFIGURACIÓN
+     * ============================================================
+     */
+
+    const API_URL = "https://fumbbl.com/api/team/get/";
+
+    const TEAM_IDS = [
+        1308201,
+        1307737,
+        1307317,
+        1305842,
+        1305108,
+        1306832,
+        1305357,
+        1306035,
+        1307727,
+        1304939,
+        1305185,
+        1305475,
+        1304924,
+        1305193,
+        1305109,
+        1307740
+    ];
+
+
+    /*
+     * ============================================================
+     * OBTENER UN EQUIPO
+     * ============================================================
+     */
+
+    async function fetchTeam(teamId) {
+
+        const response = await fetch(
+            `${API_URL}${teamId}`
+        );
+
+        if (!response.ok) {
+            throw new Error(
+                `HTTP ${response.status} para equipo ${teamId}`
+            );
+        }
+
+        const team = await response.json();
+
+        return normalizeTeam(team, teamId);
+    }
+
+
+    /*
+     * ============================================================
+     * NORMALIZAR DATOS
+     * ============================================================
+     *
+     * htmlBio contiene la letra del grupo.
+     *
+     * Si no existe:
+     *      Grupo A
+     *
+     */
+
+    function normalizeTeam(team, requestedId) {
+
+        const groupRaw =
+            typeof team.bio.htmlBio === "string"
+                ? team.bio.htmlBio.trim().toUpperCase()
+                : "";
+
+        const group =
+            /^[A-Z]$/.test(groupRaw)
+                ? groupRaw
+                : "Z";
+
+
+
+        const record = team.record || {};
+        const td = team.record.td || {};
+        const cas = team.record.cas || {};
+
+
+        const wins = Number(record.wins) || 0;
+        const ties = Number(record.ties) || 0;
+        const losses = Number(record.losses) || 0;
+
+        const tdFor = Number(td.for) || 0;
+        const tdAgainst = Number(td.against) || 0;
+
+        const casFor = Number(cas.for) || 0;
+        const casAgainst = Number(cas.against) || 0;
+
+
+        /*
+         * Sistema de puntos:
+         *
+         * Victoria = 3
+         * Empate   = 1
+         * Derrota  = 0
+         */
+
+        const points =
+            (wins * 3) + ties;
+
+
+        return {
+
+            id: team.id || requestedId,
+            
+            coach: team.coach.name || "",
+
+            name:
+                team.name ||
+                `Equipo ${requestedId}`,
+
+            group,
+
+            wins,
+            ties,
+            losses,
+
+            games:
+                wins + ties + losses,
+
+            points,
+
+            tdFor,
+            tdAgainst,
+
+            tdDiff:
+                tdFor - tdAgainst,
+
+            casFor,
+            casAgainst,
+
+            casDiff:
+                casFor - casAgainst,
+
+            teamValue:
+                Number(team.teamValue) || 0
+
+        };
+    }
+
+
+    /*
+     * ============================================================
+     * ORDENAR CLASIFICACIÓN
+     * ============================================================
+     *
+     * 1. Puntos
+     * 2. Victorias
+     * 3. Diferencia TD
+     * 4. TD a favor
+     * 5. Diferencia de bajas
+     * 6. Bajas a favor
+     * 7. Nombre
+     *
+     */
+
+    function sortTeams(a, b) {
+
+        return (
+
+            b.points - a.points ||
+
+            b.wins - a.wins ||
+
+            b.tdDiff - a.tdDiff ||
+
+            b.tdFor - a.tdFor ||
+
+            b.casDiff - a.casDiff ||
+
+            b.casFor - a.casFor ||
+
+            a.name.localeCompare(
+                b.name,
+                "es"
+            )
+
+        );
+    }
+
+
+    /*
+     * ============================================================
+     * ESCAPAR HTML
+     * ============================================================
+     *
+     * Evita insertar directamente contenido procedente
+     * de la API en el HTML.
+     *
+     */
+
+    function escapeHtml(value) {
+
+        return String(value)
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+    }
+
+
+    /*
+     * ============================================================
+     * FORMATEAR DIFERENCIAS
+     * ============================================================
+     */
+
+    function formatDifference(value) {
+
+        if (value > 0) {
+
+            return `
+                <span class="positive">
+                    +${value}
+                </span>
+            `;
+
+        }
+
+        if (value < 0) {
+
+            return `
+                <span class="negative">
+                    ${value}
+                </span>
+            `;
+
+        }
+
+        return "0";
+    }
+
+
+    /*
+     * ============================================================
+     * CREAR TABLA DE GRUPO
+     * ============================================================
+     */
+
+    function renderGroup(group, teams) {
+
+        teams.sort(sortTeams);
+
+
+        const rows = teams.length
+
+            ? teams.map((team, index) => {
+
+                return `
+
+                    <tr>
+
+                        <td class="position">
+                            ${index + 1}
+                        </td>
+
+
+                        <td class="team">
+
+                            <div class="team-name">
+                                ${ (index + 1) < 3 ? "<span>⭐</span>":"" }<a class="team-link" href="https://fumbbl.com/t/${team.id}" target="_blank" rel="noopener noreferrer">${escapeHtml(team.name)}</a>
+                            </div>
+
+                            <span class="team-id">
+                                #${team.coach}
+                            </span>
+
+                        </td>
+
+
+                        <td>
+                            ${team.games}
+                        </td>
+
+
+                        <td class="record">
+
+                            <span class="wins">
+                                ${team.wins}
+                            </span>
+
+                            -
+
+                            <span class="ties">
+                                ${team.ties}
+                            </span>
+
+                            -
+
+                            <span class="losses">
+                                ${team.losses}
+                            </span>
+
+                        </td>
+
+
+                        <td class="points">
+                            ${team.points}
+                        </td>
+
+
+                        <td>
+                            ${team.tdFor}
+                        </td>
+
+
+                        <td>
+                            ${team.tdAgainst}
+                        </td>
+
+
+                        <td>
+                            ${formatDifference(team.tdDiff)}
+                        </td>
+
+
+                        <td>
+                            ${team.casFor}
+                        </td>
+
+
+                        <td>
+                            ${formatDifference(team.casDiff)}
+                        </td>
+
+                    </tr>
+
+                `;
+
+            }).join("")
+
+
+            : `
+
+                <tr>
+
+                    <td
+                        colspan="10"
+                        class="empty"
+                    >
+                        No hay equipos registrados en este grupo.
+                    </td>
+
+                </tr>
+
+            `;
+
+
+        return `
+
+            <section class="group">
+
+                <div class="group-header">
+
+                    <div class="group-title">
+
+                        <div class="group-letter">
+                            ${escapeHtml(group)}
+                        </div>
+
+                        <div class="group-name">
+                            Grupo ${escapeHtml(group)}
+                        </div>
+
+                    </div>
+
+
+                    <div class="team-count">
+
+                        ${teams.length}
+                        ${teams.length === 1
+                            ? "equipo"
+                            : "equipos"
+                        }
+
+                    </div>
+
+                </div>
+
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    #
+                                </th>
+
+                                <th class="team-column">
+                                    Equipo
+                                </th>
+
+                                <th>
+                                    PJ
+                                </th>
+
+                                <th>
+                                    G-E-P
+                                </th>
+
+                                <th>
+                                    PTS
+                                </th>
+
+                                <th>
+                                    TD+
+                                </th>
+
+                                <th>
+                                    TD-
+                                </th>
+
+                                <th>
+                                    DIF
+                                </th>
+
+                                <th>
+                                    CAS+
+                                </th>
+
+                                <th>
+                                    CAS DIF
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            ${rows}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+        `;
+    }
+
+
+    /*
+     * ============================================================
+     * RENDER GENERAL
+     * ============================================================
+     */
+
+    function renderStandings(teams) {
+
+        const groups = {};
+
+
+        /*
+         * Crear grupos dinámicamente.
+         *
+         * Si aparece Grupo B, C, D, etc.,
+         * se crea automáticamente.
+         */
+
+        teams.forEach(team => {
+
+            if (!groups[team.group]) {
+                groups[team.group] = [];
+            }
+
+            groups[team.group].push(team);
+
+        });
+
+
+        /*
+         * Aseguramos que Grupo A exista,
+         * incluso si ningún equipo tiene datos.
+         */
+
+        if (!groups.A) {
+            groups.A = [];
+        }
+
+
+        /*
+         * Orden alfabético de grupos:
+         *
+         * A
+         * B
+         * C
+         * ...
+         */
+
+        const groupNames =
+            Object.keys(groups)
+                .sort((a, b) =>
+                    a.localeCompare(b)
+                );
+
+
+        document.getElementById(
+            "standings"
+        ).innerHTML = `
+
+            <div class="groups">
+
+                ${groupNames
+                    .map(group =>
+                        renderGroup(
+                            group,
+                            groups[group]
+                        )
+                    )
+                    .join("")
+                }
+
+            </div>
+
+        `;
+    }
+
+
+    /*
+     * ============================================================
+     * CARGAR TODOS LOS EQUIPOS
+     * ============================================================
+     */
+
+    async function loadStandings() {
+
+        const standings =
+            document.getElementById(
+                "standings"
+            );
+
+        const status =
+            document.getElementById(
+                "status"
+            );
+
+
+        standings.innerHTML = `
+
+            <div class="loading">
+
+                <div class="ball">
+                    🏈
+                </div>
+
+                <div class="loading-text">
+                    Consultando equipos...
+                </div>
+
+            </div>
+
+        `;
+
+
+        status.textContent =
+            `Consultando ${TEAM_IDS.length} equipos...`;
+
+
+        try {
+
+            /*
+             * Todas las peticiones se hacen en paralelo.
+             */
+
+            const results =
+                await Promise.allSettled(
+
+                    TEAM_IDS.map(
+                        fetchTeam
+                    )
+
+                );
+
+
+            const teams = [];
+
+            const errors = [];
+
+
+            results.forEach((result, index) => {
+
+                if (
+                    result.status === "fulfilled"
+                ) {
+
+                    teams.push(
+                        result.value
+                    );
+
+                } else {
+
+                    errors.push({
+                        id: TEAM_IDS[index],
+                        error: result.reason
+                    });
+
+                }
+
+            });
+
+
+            if (!teams.length) {
+
+                throw new Error(
+                    "No fue posible obtener ningún equipo."
+                );
+
+            }
+
+
+            renderStandings(teams);
+
+
+            status.textContent =
+                `${teams.length} equipos cargados`;
+
+
+            /*
+             * Si alguna petición falló,
+             * mostramos el aviso sin bloquear
+             * las demás tablas.
+             */
+
+            if (errors.length) {
+
+                status.textContent +=
+                    ` · ${errors.length} con error`;
+
+                console.warn(
+                    "Equipos que no pudieron cargarse:",
+                    errors
+                );
+
+            }
+
+        } catch (error) {
+
+            console.error(error);
+
+
+            standings.innerHTML = `
+
+                <div class="error">
+
+                    <strong>
+                        No se pudo cargar la clasificación.
+                    </strong>
+
+                    <br><br>
+
+                    ${escapeHtml(
+                        error.message
+                    )}
+
+                    <br><br>
+
+                    Revisa la conexión con la API de FUMBBL
+                    y vuelve a intentarlo.
+
+                </div>
+
+            `;
+
+
+            status.textContent =
+                "Error al cargar la liga";
+
+        }
+
+    }
+
+
+    /*
+     * ============================================================
+     * BOTÓN ACTUALIZAR
+     * ============================================================
+     */
+
+    document
+        .getElementById("reload")
+        .addEventListener(
+            "click",
+            loadStandings
+        );
+
+
+    /*
+     * ============================================================
+     * ARRANQUE
+     * ============================================================
+     */
+
+    loadStandings();
+
+</script>
+
+</body>
+</html>
