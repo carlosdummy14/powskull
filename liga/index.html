@@ -792,6 +792,8 @@
 
         const wins = Number(record.wins) || 0;
         const ties = Number(record.ties) || 0;
+        // Por los que no contestan.
+        if ([1307727,1307317].includes(team.id)) ties++;
         const losses = Number(record.losses) || 0;
 
         const tdFor = Number(td.for) || 0;
