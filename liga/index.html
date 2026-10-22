@@ -718,7 +718,7 @@
     const TEAM_IDS = [
         1308201,
         1307737,
-        1307317,
+        1314345,
         1305842,
         1305108,
         1306832,
@@ -793,15 +793,16 @@
         const wins = Number(record.wins) || 0;
         let ties = Number(record.ties) || 0;
         // Por los que no contestan.
-        if ([1307727,1307317].includes(team.id)) ties++;
-        const losses = Number(record.losses) || 0;
+        if ([1307727,1307317].includes(team.id)) ties++; // TheEvilDrNo and Shinox
+        let losses = Number(record.losses) || 0;
 
         const tdFor = Number(td.for) || 0;
-        const tdAgainst = Number(td.against) || 0;
+        let tdAgainst = Number(td.against) || 0;
 
-        const casFor = Number(cas.for) || 0;
-        const casAgainst = Number(cas.against) || 0;
+        let casFor = Number(cas.for) || 0;
+        let casAgainst = Number(cas.against) || 0;
 
+        if ([1314345].includes(team.id)) ties=ties + 2, losses = losses + 2, tdAgainst = tdAgainst + 4, casFor = casFor + 5, casAgainst = casAgainst + 4 ; // GotrekSlayer
 
         /*
          * Sistema de puntos:
