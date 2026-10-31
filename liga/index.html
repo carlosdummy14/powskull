@@ -642,6 +642,16 @@
                 font-size: 27px;
             }
         }
+
+        /* ================================
+        SEPARACIÓN PLAYOFFS
+        ================================ */
+
+        .playoffs {
+            margin-top: 60px;
+            border-top: 5px solid var(--gold);
+            box-shadow: 0 0 25px rgba(214,169,58,.12);
+        }
     </style>
 </head>
 
@@ -1220,27 +1230,162 @@
                 );
 
 
-        document.getElementById(
-            "standings"
-        ).innerHTML = `
+                document.getElementById(
+    "standings"
+).innerHTML = `
 
-            <div class="groups">
 
-                ${groupNames
-                    .map(group =>
-                        renderGroup(
-                            group,
-                            groups[group]
-                        )
-                    )
-                    .join("")
-                }
+<div class="groups">
+    
+    ${groupNames
+        .map(group =>
+        renderGroup(
+            group,
+            groups[group]
+        )
+    )
+    .join("")
+}
+
+</div>
+
+${renderPlayoffs(groups)}
+
+`;
+    }
+
+    /*
+ * ============================================================
+ * CLASIFICADOS A PLAYOFFS
+ * ============================================================
+ */
+
+function renderPlayoffs(groups) {
+
+const qualified = [];
+
+Object.keys(groups).forEach(group => {
+
+    // Ordenar equipos del grupo
+    const sorted = [...groups[group]].sort(sortTeams);
+
+    // Clasificar primero y segundo
+    sorted.slice(0, 2).forEach((team, index) => {
+
+        qualified.push({
+            ...team,
+            groupPosition: index + 1,
+            group: group
+        });
+
+    });
+
+});
+
+// Orden general de todos los clasificados
+qualified.sort(sortTeams);
+
+const rows = qualified.map((team, index) => {
+
+    return `
+        <tr>
+
+            <td class="position">
+                ${index + 1}
+            </td>
+
+            <td class="team">
+                <div class="team-name">
+                    <a class="team-link"
+                       href="https://fumbbl.com/t/${team.id}"
+                       target="_blank"
+                       rel="noopener noreferrer">
+                        ${escapeHtml(team.name)}
+                    </a>
+                </div>
+
+                <span class="team-id">
+                    #${escapeHtml(team.coach)}
+                </span>
+            </td>
+
+            <td>
+                Grupo ${escapeHtml(team.group)}
+            </td>
+
+            <td>
+                ${team.groupPosition}°
+            </td>
+
+            <td class="points">
+                ${team.points}
+            </td>
+
+            <td>
+                ${team.wins}
+            </td>
+
+            <td>
+                ${formatDifference(team.tdDiff)}
+            </td>
+
+        </tr>
+    `;
+
+}).join("");
+
+return `
+
+    <section class="group playoffs">
+
+        <div class="group-header">
+
+            <div class="group-title">
+
+                <div class="group-letter">
+                    🏆
+                </div>
+
+                <div class="group-name">
+                    Clasificados a Playoffs
+                </div>
 
             </div>
 
-        `;
-    }
+            <div class="team-count">
+                ${qualified.length} clasificados
+            </div>
 
+        </div>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th class="team-column">Equipo</th>
+                        <th>Grupo</th>
+                        <th>Pos.</th>
+                        <th>PTS</th>
+                        <th>G</th>
+                        <th>TD DIF</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    ${rows}
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+`;
+}
 
     /*
      * ============================================================
