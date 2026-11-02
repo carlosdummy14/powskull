@@ -666,7 +666,7 @@
     <h1>Liga Mexicana de FUMBBL</h1>
 
     <div class="subtitle">
-        Tepache Cup Season </br> <h3>SEMANA <s>6</s> 7 (casi 8)</h3>
+        Tepache Cup Season </br> <h3>SEMANA <s>7</s> 8 (casi 9)</h3>
     </div>
 
 </header>
@@ -800,12 +800,18 @@
         const cas = team.record.cas || {};
 
 
-        const wins = Number(record.wins) || 0;
+        let wins = Number(record.wins) || 0;
+        // Cedido
+        if ([1305109].includes(team.id)) wins++; // ElCruzad0
+        
         let ties = Number(record.ties) || 0;
         // Por los que no contestan.
         if ([1307727, 1307317].includes(team.id)) ties++; // TheEvilDrNo and Shinox
+        
         let losses = Number(record.losses) || 0;
-
+        // Cedido
+        if ([1305357].includes(team.id)) losses++; // carlosmtnz
+        
         const tdFor = Number(td.for) || 0;
         let tdAgainst = Number(td.against) || 0;
 
